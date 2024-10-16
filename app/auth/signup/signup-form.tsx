@@ -1,12 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 
 // Form Items
 import { useForm } from "react-hook-form";
 
 // Schema
 import { RegisterSchema } from "@/schemas/index";
+
+// Actions
+import { signup } from "./actions";
 
 // Zod
 import { z } from "zod";
@@ -25,6 +30,11 @@ import {
 import { Input } from "@/components/ui/input";
 
 const SignupForm = () => {
+  const [isPending, startTransition] = useTransition();
+
+  const [error, setError] = useState<string>();
+
+  const router = useRouter();
   // 1. Define your form.
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -38,13 +48,22 @@ const SignupForm = () => {
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof RegisterSchema>) {
-    console.log(values);
+    startTransition(() => {
+      signup(values).then((data) => {
+        if (data?.error) {
+          setError(data.error);
+        } else if (data?.success) {
+          router.push("/auth/login");
+        }
+      });
+    });
   }
   return (
     <div className="w-11/12 max-w-xs border rounded-md p-2">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
+            disabled={isPending}
             control={form.control}
             name="fullname"
             render={({ field }) => (
@@ -58,6 +77,7 @@ const SignupForm = () => {
             )}
           />
           <FormField
+            disabled={isPending}
             control={form.control}
             name="email"
             render={({ field }) => (
@@ -71,6 +91,7 @@ const SignupForm = () => {
             )}
           />
           <FormField
+            disabled={isPending}
             control={form.control}
             name="password"
             render={({ field }) => (
@@ -84,6 +105,7 @@ const SignupForm = () => {
             )}
           />
           <FormField
+            disabled={isPending}
             control={form.control}
             name="confirmPassword"
             render={({ field }) => (
@@ -101,8 +123,9 @@ const SignupForm = () => {
               Already have an account? Sign in
             </Link>
           </Button>
-          <Button type="submit" className="w-full">
-            Sign up
+          {error ? <p className="text-xs text-red-500">{error}</p> : null}
+          <Button disabled={isPending} type="submit" className="w-full">
+            {isPending ? "Loading..." : " Sign up"}
           </Button>
         </form>
       </Form>
