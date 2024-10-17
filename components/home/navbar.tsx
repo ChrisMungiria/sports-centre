@@ -31,7 +31,7 @@ const Navbar = ({ user }: NavbarProps) => {
         user ? (
           <DropdownMenu>
             <DropdownMenuTrigger className="bg-slate-100 p-2 rounded-md flex items-center gap-2 focus:outline-none">
-              {user.email}
+              <p className="font-semibold">{user.user_metadata.display_name}</p>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem>

@@ -55,7 +55,7 @@ export async function signup(values: z.infer<typeof RegisterSchema>) {
     // Update the user's displayname
     const { error: displaynameError } = await supabase.auth.updateUser({
       data: {
-        fullname,
+        display_name: fullname,
       },
     });
 
