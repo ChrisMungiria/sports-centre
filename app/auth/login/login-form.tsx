@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 
 // Form Items
 import { useForm } from "react-hook-form";
@@ -31,6 +32,8 @@ const LoginForm = () => {
 
   const [error, setError] = useState<string>();
 
+  const router = useRouter();
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -46,10 +49,9 @@ const LoginForm = () => {
       login(values).then((data) => {
         if (data?.error) {
           setError(data.error);
+        } else if (data?.success) {
+          router.push("/");
         }
-        // } else if (data?.success) {
-        //   router.push("/auth/login");
-        // }
       });
     });
   }
