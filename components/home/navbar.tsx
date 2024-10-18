@@ -16,6 +16,7 @@ import {
 // Types
 import { User } from "@supabase/supabase-js";
 import { signOut } from "@/actions";
+import Image from "next/image";
 
 type NavbarProps = {
   user: User | null;
@@ -24,16 +25,32 @@ type NavbarProps = {
 const Navbar = ({ user }: NavbarProps) => {
   const pathname = usePathname();
 
+  console.log("User image: ", user?.user_metadata.avatar_url);
+
   return (
     <nav className="w-full h-fit p-4 fixed inset-0 border-b flex items-center justify-between z-50 backdrop-blur-sm">
       <h2 className="font-semibold text-lg">SportsCentre</h2>
       {!pathname.includes("/auth") ? (
         user ? (
           <DropdownMenu>
-            <DropdownMenuTrigger className="bg-slate-100 p-2 rounded-md flex items-center gap-2 focus:outline-none">
-              <p className="font-semibold">{user.user_metadata.display_name}</p>
+            <DropdownMenuTrigger className="border p-2 rounded-md flex items-center gap-2 focus:outline-none">
+              {user.user_metadata.avatar_url ? (
+                <Image
+                  src={`${user.user_metadata.avatar_url}`}
+                  alt="avatar"
+                  width={20}
+                  height={20}
+                  className="rounded-full object-cover"
+                />
+              ) : null}
+
+              <p className="text-sm">
+                {user.user_metadata.display_name
+                  ? user.user_metadata.display_name
+                  : user.user_metadata.full_name}
+              </p>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent className="w-full">
               <DropdownMenuItem>
                 {/* TODO: Add a link for viewing profile */}
                 <p>View profile</p>
