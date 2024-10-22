@@ -35,17 +35,21 @@ const Navbar = ({ user }: NavbarProps) => {
           user ? (
             <>
               <DropdownMenu>
-                <DropdownMenuTrigger className="focus:outline-none">
+                <DropdownMenuTrigger className="focus:outline-none" asChild>
                   <Button>Add</Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link href={"/add-category"} className="w-full h-full">
                       Add Category
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Add Post</DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href={"/add-post"} className="w-full h-full">
+                      Add Post
+                    </Link>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu>
