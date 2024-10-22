@@ -2,15 +2,15 @@ type Post = {
   id: number;
   title: string;
   description: string;
-  category: SportCategory;
+  category: Category;
   createdAt: Date;
   image?: string;
   postRef?: string;
 };
 
-type SportCategory = {
+type Category = {
   id: number;
-  icon: string;
-  title: string;
   created_at: Date;
+  title: string;
+  icon: string;
 };

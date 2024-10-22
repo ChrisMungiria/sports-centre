@@ -100,7 +100,7 @@ const AddCategoryForm = () => {
             )}
           />
           {error ? <p className="text-xs text-red-500">{error}</p> : null}
-          <Button type="submit" className="w-full">
+          <Button disabled={isPending} type="submit" className="w-full">
             {isPending ? "Adding..." : "Add category"}
           </Button>
         </form>

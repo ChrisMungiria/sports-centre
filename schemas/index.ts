@@ -28,3 +28,15 @@ export const CategorySchema = z.object({
     message: "Title must have at least 2 characters",
   }),
 });
+
+export const PostSchema = z.object({
+  title: z.string().min(2, {
+    message: "Title must contain at least 2 characters",
+  }),
+  description: z.string().min(2, {
+    message: "Description must have at least 2 characters",
+  }),
+  category: z.number().min(1, {
+    message: "Please select a category",
+  }),
+});
