@@ -12,5 +12,5 @@ type SportCategory = {
   id: number;
   icon: string;
   title: string;
-  createdAt: Date;
+  created_at: Date;
 };

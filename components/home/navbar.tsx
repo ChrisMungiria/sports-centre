@@ -33,41 +33,57 @@ const Navbar = ({ user }: NavbarProps) => {
         <ModeToggle />
         {!pathname.includes("/auth") ? (
           user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger className="border p-2 rounded-md flex items-center gap-2 focus:outline-none">
-                {user.user_metadata.avatar_url ? (
-                  <Image
-                    src={`${user.user_metadata.avatar_url}`}
-                    alt="avatar"
-                    width={20}
-                    height={20}
-                    className="rounded-full object-cover"
-                  />
-                ) : null}
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="focus:outline-none">
+                  <Button>Add</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>
+                    <Link href={"/add-category"} className="w-full h-full">
+                      Add Category
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Add Post</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="border p-2 rounded-md flex items-center gap-2 focus:outline-none">
+                  {user.user_metadata.avatar_url ? (
+                    <Image
+                      src={`${user.user_metadata.avatar_url}`}
+                      alt="avatar"
+                      width={20}
+                      height={20}
+                      className="rounded-full object-cover"
+                    />
+                  ) : null}
 
-                <p className="text-sm">
-                  {user.user_metadata.display_name
-                    ? user.user_metadata.display_name
-                    : user.user_metadata.full_name}
-                </p>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-full">
-                <DropdownMenuItem>
-                  {/* TODO: Add a link for viewing profile */}
-                  <p>View profile</p>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <Button
-                  variant={"destructive"}
-                  className="w-full"
-                  onClick={() => {
-                    signOut();
-                  }}
-                >
-                  Sign out
-                </Button>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <p className="text-sm">
+                    {user.user_metadata.display_name
+                      ? user.user_metadata.display_name
+                      : user.user_metadata.full_name}
+                  </p>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-full">
+                  <DropdownMenuItem>
+                    {/* TODO: Add a link for viewing profile */}
+                    <p>View profile</p>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <Button
+                    variant={"destructive"}
+                    className="w-full"
+                    onClick={() => {
+                      signOut();
+                    }}
+                  >
+                    Sign out
+                  </Button>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
           ) : (
             <Button asChild>
               <Link href="/auth/login">Sign in</Link>

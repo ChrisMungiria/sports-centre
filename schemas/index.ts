@@ -21,3 +21,10 @@ export const RegisterSchema = z.object({
     message: "Password must be at least 6 characters",
   }),
 });
+
+export const CategorySchema = z.object({
+  icon: z.string(),
+  title: z.string().min(2, {
+    message: "Title must have at least 2 characters",
+  }),
+});
