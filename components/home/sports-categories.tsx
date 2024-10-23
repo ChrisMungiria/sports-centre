@@ -1,7 +1,7 @@
 "use client";
 
 // React
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 // Actions
 import { fetchAllCategories } from "@/actions/category";
@@ -9,7 +9,16 @@ import { fetchAllCategories } from "@/actions/category";
 // Components
 import { Button } from "../ui/button";
 
-const SportCategories = () => {
+// Props
+type SportCategoriesProps = {
+  selectedCategory: Category | undefined | null;
+  setSelectedCategory: Dispatch<SetStateAction<Category | null | undefined>>;
+};
+
+const SportCategories = ({
+  selectedCategory,
+  setSelectedCategory,
+}: SportCategoriesProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [allCategories, setAllCategories] = useState<Category[] | null>();
   const [error, setError] = useState<string | null>();
@@ -58,7 +67,13 @@ const SportCategories = () => {
     <div className="flex items-center gap-2 overflow-x-scroll">
       {allCategories
         ? allCategories.map((category, index) => (
-            <Button variant={"outline"} key={index}>
+            <Button
+              key={index}
+              variant={selectedCategory === category ? "default" : "outline"}
+              onClick={() => {
+                setSelectedCategory(category);
+              }}
+            >
               <p className="text-nowrap text-sm">
                 {category.icon} {category.title}
               </p>
