@@ -6,7 +6,7 @@ import { useState, useTransition } from "react";
 import { CategorySchema } from "@/schemas";
 
 // Actions
-import { addCategoryAction } from "./actions";
+import { addCategory } from "@/actions/category";
 
 // Zod and React Hook Form
 import { useForm } from "react-hook-form";
@@ -47,7 +47,7 @@ const AddCategoryForm = () => {
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof CategorySchema>) {
     startTransition(() => {
-      addCategoryAction(values).then((data) => {
+      addCategory(values).then((data) => {
         if (data?.error) {
           setError(data.error);
         } else if (data.success) {

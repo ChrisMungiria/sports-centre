@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { RegisterSchema } from "@/schemas/index";
 
 // Actions
-import { signup } from "./actions";
+import { signup } from "@/actions/auth";
 
 // Zod
 import { z } from "zod";

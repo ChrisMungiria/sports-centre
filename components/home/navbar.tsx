@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 // Components
 import { Button } from "@/components/ui/button";
@@ -12,12 +13,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ModeToggle } from "./mode-toggle";
 
 // Types
 import { User } from "@supabase/supabase-js";
-import { signOut } from "@/actions";
-import Image from "next/image";
-import { ModeToggle } from "./mode-toggle";
+
+// Actions
+import { signOut } from "@/actions/auth";
 
 type NavbarProps = {
   user: User | null;

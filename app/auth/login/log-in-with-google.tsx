@@ -1,5 +1,5 @@
+import { loginWithGoogleAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
-import { loginWithGoogleAction } from "./actions";
 
 const LogInWithGoogle = () => {
   return (

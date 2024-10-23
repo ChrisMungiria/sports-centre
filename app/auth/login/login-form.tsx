@@ -28,7 +28,7 @@ import { Input } from "@/components/ui/input";
 import LogInWithGoogle from "./log-in-with-google";
 
 // Actions
-import { login } from "./actions";
+import { login } from "@/actions/auth";
 
 const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
