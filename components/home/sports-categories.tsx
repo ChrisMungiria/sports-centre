@@ -39,8 +39,18 @@ const SportsCategories = ({
     fetchAllCategoriesFn();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-
+  if (loading)
+    return (
+      <div className="flex items-center gap-2">
+        <div className="h-10 w-32 bg-slate-200 rounded-md animate-pulse "></div>
+        <div className="h-10 w-32 bg-slate-200 rounded-md animate-pulse "></div>
+        <div className="h-10 w-32 bg-slate-200 rounded-md animate-pulse "></div>
+        <div className="h-10 w-32 bg-slate-200 rounded-md animate-pulse "></div>
+        <div className="h-10 w-32 bg-slate-200 rounded-md animate-pulse "></div>
+        <div className="h-10 w-32 bg-slate-200 rounded-md animate-pulse "></div>
+        <div className="h-10 w-32 bg-slate-200 rounded-md animate-pulse "></div>
+      </div>
+    );
   return (
     <div className="flex items-center gap-2">
       {categories ? (

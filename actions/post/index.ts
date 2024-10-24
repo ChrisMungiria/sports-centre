@@ -46,3 +46,21 @@ export const addPostAction = async (values: z.infer<typeof PostSchema>) => {
     };
   }
 };
+
+export const fetchAllPosts = async () => {
+  // Create the supabase client
+  const supabase = createClient();
+
+  try {
+    const { data } = await supabase.from("Posts").select();
+
+    return {
+      data,
+    };
+  } catch (error) {
+    console.log("Error fetching all posts in server component: ", error);
+    return {
+      error: "An unexpected error occurred while fetching posts",
+    };
+  }
+};

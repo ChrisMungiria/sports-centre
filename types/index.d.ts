@@ -1,11 +1,11 @@
 type Post = {
   id: number;
+  created_at: string;
   title: string;
   description: string;
-  category: Category;
-  createdAt: Date;
   image?: string;
-  postRef?: string;
+  category: number;
+  created_by: string;
 };
 
 type Category = {
