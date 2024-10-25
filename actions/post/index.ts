@@ -1,50 +1,66 @@
 "use server";
-import { PostSchema } from "@/schemas";
 import { createClient } from "@/utils/supabase/server";
-import { z } from "zod";
 
-export const addPostAction = async (values: z.infer<typeof PostSchema>) => {
-  // Parse the data on the server
-  const validatedValues = PostSchema.safeParse(values);
-  if (!validatedValues.success) {
-    console.log("The error: ", validatedValues.error);
-    return {
-      error: "Error validating values",
-    };
-  }
+type PostData = {
+  title: string | null;
+  description: string | null;
+  category: string | null;
+  created_by: string;
+  image?: string;
+};
 
-  const { category, description, title } = validatedValues.data;
-
-  // Create the supabase client
+export const addPostAction = async (formData: FormData) => {
   const supabase = createClient();
 
-  // Get the logged in user id
-  const user = await supabase.auth.getUser();
-
-  // Try adding the data to the db
-  try {
-    if (!user.data.user) {
-      return {
-        error: "No user logged in",
-      };
-    }
-    const { error } = await supabase.from("Posts").insert({
-      title,
-      description,
-      category,
-      created_by: user.data.user.id,
-    });
-    console.log("Error: ", error);
-
-    return {
-      success: true,
-    };
-  } catch (error) {
-    console.log("Error adding post: ", error);
-    return {
-      error: "An unexpected error occurred",
-    };
+  // Get the logged-in user
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+  if (userError || !user) {
+    console.error("Authentication error:", userError);
+    return { error: "Authentication failed" };
   }
+
+  // Extract form data
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+  const category = formData.get("category") as string;
+  const imageFile = formData.get("image") as File | null;
+
+  // Prepare post data
+  const postData: PostData = {
+    title,
+    description,
+    category,
+    created_by: user.id,
+  };
+
+  // Handle image upload if present
+  if (imageFile instanceof File) {
+    const { data: imageData, error: uploadError } = await supabase.storage
+      .from("post_images")
+      .upload(`posts/${imageFile.name}`, imageFile, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (uploadError) {
+      console.error("Image upload error:", uploadError);
+      return { error: "Failed to upload image" };
+    }
+
+    postData.image = imageData.path;
+  }
+
+  // Insert post into database
+  const { error: insertError } = await supabase.from("Posts").insert(postData);
+  if (insertError) {
+    console.error("Post insertion error:", insertError);
+    return { error: "Failed to create post" };
+  }
+
+  return { success: true };
 };
 
 export const fetchAllPosts = async () => {

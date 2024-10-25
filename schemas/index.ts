@@ -39,4 +39,5 @@ export const PostSchema = z.object({
   category: z.number().min(1, {
     message: "Please select a category",
   }),
+  image: z.any().optional(),
 });

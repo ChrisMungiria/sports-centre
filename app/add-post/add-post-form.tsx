@@ -57,8 +57,16 @@ const AddPostForm = ({ data }: AddPostFormProps) => {
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof PostSchema>) {
+    const formData = new FormData();
+    if (values.image) {
+      formData.append("image", values.image); // Append the image to FormData
+    }
+
+    formData.append("category", values.category.toString());
+    formData.append("description", values.description);
+    formData.append("title", values.title);
     startTransition(() => {
-      addPostAction(values).then((data) => {
+      addPostAction(formData).then((data) => {
         if (data.error) {
           setError(data.error);
         } else if (data.success) {
@@ -133,6 +141,28 @@ const AddPostForm = ({ data }: AddPostFormProps) => {
                     ))}
                   </SelectContent>
                 </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Image (Optional)</FormLabel>
+                <FormControl>
+                  <Input
+                    type="file"
+                    disabled={isPending}
+                    onChange={(e) => {
+                      if (e.target.files) {
+                        // Handle file upload logic here
+                        field.onChange(e.target.files[0]);
+                      }
+                    }}
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
