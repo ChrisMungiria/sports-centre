@@ -52,7 +52,7 @@ const SportsCategories = ({
       </div>
     );
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 overflow-scroll">
       {categories ? (
         categories.map((category, index) => (
           <Button
