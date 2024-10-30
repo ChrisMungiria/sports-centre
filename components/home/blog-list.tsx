@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 // React
 import { useEffect, useMemo, useState } from "react";
 
@@ -18,7 +20,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
+
+// Loading skeleton
+import PostsLoadingSkeleton from "../loading-skeletons/posts-loading-skeleton";
 
 // Props
 type BlogListProps = {
@@ -113,7 +117,7 @@ const BlogList = ({ selectedCategory }: BlogListProps) => {
   return (
     <div className="space-y-2 mt-4 overflow-y-scroll">
       {loading ? (
-        <p>Loading...</p>
+        <PostsLoadingSkeleton />
       ) : error ? (
         <p>{error}</p>
       ) : filterPosts.length > 0 ? (
