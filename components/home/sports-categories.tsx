@@ -59,7 +59,11 @@ const SportsCategories = ({
             key={index}
             variant={selectedCategory === category ? "default" : "outline"}
             onClick={() => {
-              setSelectedCategory(category);
+              if (selectedCategory === category) {
+                setSelectedCategory(null);
+              } else {
+                setSelectedCategory(category);
+              }
             }}
           >
             {category.icon} {category.title}
