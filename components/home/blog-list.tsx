@@ -1,7 +1,7 @@
 "use client";
 
 // React
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 // Date FNS
 import { formatDistanceToNow, format } from "date-fns";
@@ -83,6 +83,11 @@ const BlogList = ({ selectedCategory }: BlogListProps) => {
       if (error) {
         setError(error);
       } else if (data) {
+        // sort the posts by created_at in descending order
+        data.sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
         setPosts(data);
       }
     } catch (error) {
@@ -93,19 +98,32 @@ const BlogList = ({ selectedCategory }: BlogListProps) => {
     }
   };
 
+  const filterPosts = useMemo(() => {
+    if (selectedCategory && selectedCategory.id) {
+      return posts.filter((post) => post.category === selectedCategory.id);
+    } else {
+      return posts;
+    }
+  }, [selectedCategory, posts]);
+
   useEffect(() => {
     fetchAllPostsFn();
   }, []);
+
   return (
     <div className="space-y-2 mt-4 overflow-y-scroll">
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
         <p>{error}</p>
-      ) : posts.length > 0 ? (
-        posts.map((post) => <Post key={post.id} post={post} />)
+      ) : filterPosts.length > 0 ? (
+        filterPosts.map((post) => <Post key={post.id} post={post} />)
       ) : (
-        <p>No posts</p>
+        <div className="w-full p-4 rounded-md">
+          <p className="text-center text-slate-500">
+            No posts for this category
+          </p>
+        </div>
       )}
     </div>
   );
