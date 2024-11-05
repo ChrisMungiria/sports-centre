@@ -68,7 +68,10 @@ export const fetchAllPosts = async () => {
   const supabase = createClient();
 
   try {
-    const { data } = await supabase.from("Posts").select();
+    const { data } = await supabase
+      .from("Posts")
+      .select()
+      .order("created_at", { ascending: false });
 
     return {
       data,

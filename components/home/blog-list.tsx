@@ -87,11 +87,6 @@ const BlogList = ({ selectedCategory }: BlogListProps) => {
       if (error) {
         setError(error);
       } else if (data) {
-        // sort the posts by created_at in descending order
-        data.sort(
-          (a, b) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
         setPosts(data);
       }
     } catch (error) {
