@@ -66,7 +66,7 @@ const Navbar = ({ user }: NavbarProps) => {
                     />
                   ) : null}
 
-                  <p className="text-sm">
+                  <p className="text-xs">
                     {user.user_metadata.display_name
                       ? user.user_metadata.display_name
                       : user.user_metadata.full_name}

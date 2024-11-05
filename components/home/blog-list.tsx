@@ -1,6 +1,8 @@
 "use client";
 
+// Next
 import Link from "next/link";
+import Image from "next/image";
 
 // React
 import { useEffect, useMemo, useState } from "react";
@@ -9,7 +11,7 @@ import { useEffect, useMemo, useState } from "react";
 import { formatDistanceToNow, format } from "date-fns";
 
 // Actions
-import { fetchAllPosts } from "@/actions/post";
+import { fetchAllPosts, getPostImage } from "@/actions/post";
 
 // Components
 import {
@@ -34,6 +36,8 @@ type PostProps = {
 };
 
 const Post = ({ post }: PostProps) => {
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
   const renderCreatedAt = (createdAt: string) => {
     const createdDate = new Date(createdAt);
     const now = new Date();
@@ -57,15 +61,41 @@ const Post = ({ post }: PostProps) => {
     return description;
   };
 
+  useEffect(() => {
+    if (post.image) {
+      const getPostImageHandler = async () => {
+        const { data, error } = await getPostImage(post.image!);
+        if (data) {
+          setImageUrl(data.publicUrl);
+        } else if (error) {
+          console.log("Error fetching post image: ", error);
+        }
+      };
+
+      getPostImageHandler();
+    }
+  }, [post.image]);
+
   return (
-    <Card className="max-w-xs mx-auto">
+    <Card className="max-w-xs mx-auto group">
       <CardHeader>
         <CardTitle>{post.title}</CardTitle>
         <CardDescription>
           <p>{renderCreatedAt(post.created_at)}</p>
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-2">
+        {post.image && imageUrl ? (
+          <Image
+            priority
+            unoptimized
+            src={imageUrl}
+            width={200}
+            height={300}
+            alt={post.title}
+            className="w-full h-56 object-cover rounded-lg"
+          />
+        ) : null}
         <p>{truncateDescription(post.description, 24)}</p>
       </CardContent>
       <CardFooter>

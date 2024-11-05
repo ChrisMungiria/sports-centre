@@ -83,3 +83,21 @@ export const fetchAllPosts = async () => {
     };
   }
 };
+
+export const getPostImage = async (imagePath: string) => {
+  const supabase = createClient();
+
+  try {
+    const { data } = await supabase.storage
+      .from("post_images")
+      .getPublicUrl(`${imagePath}`);
+    return {
+      data,
+    };
+  } catch (error) {
+    console.log("Error fetching the post image in server action: ", error);
+    return {
+      error: "An unexpected error occurred while fetching the post image",
+    };
+  }
+};
