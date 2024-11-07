@@ -101,3 +101,26 @@ export const getPostImage = async (imagePath: string) => {
     };
   }
 };
+
+export const getPostById = async (postId: string) => {
+  const supabase = createClient();
+
+  try {
+    const { data } = await supabase.from("Posts").select("*").eq("id", postId);
+
+    if (!data) {
+      return {
+        error: "Post not found",
+      };
+    }
+
+    return {
+      data,
+    };
+  } catch (error) {
+    console.log("Error fetching post by id in server action: ", error);
+    return {
+      error: "An unexpected error occurred while fetching the post by id",
+    };
+  }
+};

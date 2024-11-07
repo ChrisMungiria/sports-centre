@@ -77,7 +77,7 @@ const Post = ({ post }: PostProps) => {
   }, [post.image]);
 
   return (
-    <Card className="max-w-xs mx-auto group">
+    <Card className="max-w-xs mx-auto group mt-3">
       <CardHeader>
         <CardTitle>{post.title}</CardTitle>
         <CardDescription>
@@ -146,7 +146,11 @@ const BlogList = ({ selectedCategory }: BlogListProps) => {
       ) : error ? (
         <p>{error}</p>
       ) : filterPosts.length > 0 ? (
-        filterPosts.map((post) => <Post key={post.id} post={post} />)
+        filterPosts.map((post) => (
+          <Link key={post.id} href={`/post/${post.id}`}>
+            <Post key={post.id} post={post} />
+          </Link>
+        ))
       ) : (
         <div className="w-full p-4 rounded-md">
           <p className="text-center text-slate-500">
