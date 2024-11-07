@@ -14,3 +14,11 @@ type Category = {
   title: string;
   icon: string;
 };
+
+type Comment = {
+  id: number;
+  created_at: Date;
+  comment: string;
+  created_by: string;
+  post_id: number;
+};

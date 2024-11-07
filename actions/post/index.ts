@@ -124,3 +124,23 @@ export const getPostById = async (postId: string) => {
     };
   }
 };
+
+export const fetchComments = async (postId: string) => {
+  const supabase = createClient();
+
+  try {
+    const { data } = await supabase
+      .from("Comment")
+      .select()
+      .eq("post_id", postId);
+
+    return {
+      data,
+    };
+  } catch (error) {
+    console.log("Error fetcing comments in server action: ", error);
+    return {
+      error: "Error fetching comments",
+    };
+  }
+};

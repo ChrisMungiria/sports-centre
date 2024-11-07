@@ -41,3 +41,9 @@ export const PostSchema = z.object({
   }),
   image: z.any().optional(),
 });
+
+export const CommentSchema = z.object({
+  comment: z.string().min(2, {
+    message: "Comment must have at least 2 characters",
+  }),
+});
