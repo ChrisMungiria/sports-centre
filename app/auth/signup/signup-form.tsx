@@ -54,7 +54,7 @@ const SignupForm = () => {
         if (data?.error) {
           setError(data.error);
         } else if (data?.success) {
-          router.push("/auth/login");
+          router.push("/");
         }
       });
     });

@@ -145,7 +145,6 @@ export async function signup(values: z.infer<typeof RegisterSchema>) {
       };
     }
     revalidatePath("/", "layout");
-
     // Indicate success
     return { success: true };
   } catch (error) {
@@ -155,3 +154,35 @@ export async function signup(values: z.infer<typeof RegisterSchema>) {
     };
   }
 }
+
+export const addUserToDatabase = async () => {
+  // Create a supabase client
+  const supabase = createClient();
+
+  // Get the current user
+  const user = await supabase.auth.getUser();
+
+  const uid = user.data.user?.id;
+  const email = user.data.user?.email;
+  const display_name = user.data.user?.user_metadata.display_name
+    ? user.data.user?.user_metadata.display_name
+    : user.data.user?.user_metadata.full_name;
+
+  // Check if the user already exists in the database
+  const { data } = await supabase.from("Users").select("*").eq("id", uid);
+
+  if (data && data.length > 0) {
+    console.log("User already exists in the database");
+    return;
+  }
+
+  try {
+    await supabase.from("Users").insert({
+      id: uid,
+      email,
+      display_name,
+    });
+  } catch (error) {
+    console.log("Error adding user to database: ", error);
+  }
+};

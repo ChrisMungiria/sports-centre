@@ -19,7 +19,8 @@ import { ModeToggle } from "./mode-toggle";
 import { User } from "@supabase/supabase-js";
 
 // Actions
-import { signOut } from "@/actions/auth";
+import { addUserToDatabase, signOut } from "@/actions/auth";
+import { useEffect } from "react";
 
 type NavbarProps = {
   user: User | null;
@@ -27,6 +28,12 @@ type NavbarProps = {
 
 const Navbar = ({ user }: NavbarProps) => {
   const pathname = usePathname();
+
+  useEffect(() => {
+    if (user) {
+      addUserToDatabase();
+    }
+  }, [user]);
 
   return (
     <nav className="w-full h-fit p-4 fixed inset-0 border-b flex items-center justify-between z-50 backdrop-blur-sm bg-white/80 dark:bg-black/80">
