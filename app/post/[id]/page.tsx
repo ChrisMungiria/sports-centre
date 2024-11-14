@@ -3,7 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 
 // Actions
-import { fetchComments, getPostById, getPostImage } from "@/actions/post";
+import {
+  fetchComments,
+  fetchPostCreator,
+  getPostById,
+  getPostImage,
+} from "@/actions/post";
 
 // Date FNS
 import { formatDistanceToNow, format } from "date-fns";
@@ -57,6 +62,12 @@ const PostPage = async ({ params }: Params) => {
     }
   };
 
+  const getCreator = async () => {
+    const data = await fetchPostCreator(post[0].created_by);
+    if (!data) return;
+    return data.display_name;
+  };
+
   return (
     <div className="w-11/12 max-w-xl mx-auto space-y-4 relative">
       <h1 className="text-2xl font-semibold">{post[0].title}</h1>
@@ -73,8 +84,7 @@ const PostPage = async ({ params }: Params) => {
       )}
 
       <div className="flex justify-between flex-col md:flex-row">
-        {/* TODO: Fetch the user who created the post from the public user's table */}
-        <p className="font-semibold">Created by:</p>
+        <p className="font-semibold">Created by: {getCreator()}</p>
         <p className="text-slate-500 text-sm">
           {renderCreatedAt(post[0].created_at)}
         </p>
