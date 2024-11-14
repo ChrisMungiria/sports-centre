@@ -9,16 +9,22 @@ import { CategorySchema } from "@/schemas";
 import { z } from "zod";
 
 export const fetchAllCategories = async () => {
+  const supabase = createClient();
   try {
-    const supabase = createClient();
+    const { data, error } = await supabase.from("Category").select();
 
-    const { data } = await supabase.from("Category").select();
+    if (error) {
+      console.error("Error fetching categories:", error);
+      return {
+        error: "Error fetching categories",
+      };
+    }
 
     return {
       data,
     };
   } catch (error) {
-    console.log("Error in fetchCategories: ", error);
+    console.error("Unexpected error in fetchAllCategories:", error);
     return {
       error: "An unexpected error occurred",
     };
