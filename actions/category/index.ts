@@ -16,7 +16,7 @@ export const fetchAllCategories = async () => {
     if (error) {
       console.error("Error fetching categories:", error);
       return {
-        error: "Error fetching categories",
+        error: "Error fetching categories (server)",
       };
     }
 
