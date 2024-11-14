@@ -122,7 +122,7 @@ const PostPage = async ({ params }: Params) => {
           <p className="text-slate-500 text-center">
             Log in or create an account to comment.
           </p>
-          <div className="flex flex-col items-center justify-between w-3/4 mx-auto mt-4">
+          <div className="flex flex-col items-center justify-between w-3/4 mx-auto mt-4 space-y-2">
             <Button asChild>
               <Link href="/auth/login">Sign in</Link>
             </Button>
