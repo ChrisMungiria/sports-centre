@@ -1,8 +1,12 @@
 "use client";
 
+// Next
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+
+// React
+import { useEffect } from "react";
 
 // Components
 import { Button } from "@/components/ui/button";
@@ -20,13 +24,13 @@ import { User } from "@supabase/supabase-js";
 
 // Actions
 import { addUserToDatabase, signOut } from "@/actions/auth";
-import { useEffect } from "react";
 
 type NavbarProps = {
   user: User | null;
+  role: number | undefined | null;
 };
 
-const Navbar = ({ user }: NavbarProps) => {
+const Navbar = ({ user, role }: NavbarProps) => {
   const pathname = usePathname();
 
   useEffect(() => {
@@ -43,24 +47,26 @@ const Navbar = ({ user }: NavbarProps) => {
         {!pathname.includes("/auth") ? (
           user ? (
             <>
-              <DropdownMenu>
-                <DropdownMenuTrigger className="focus:outline-none" asChild>
-                  <Button>Add</Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem asChild>
-                    <Link href={"/add-category"} className="w-full h-full">
-                      Add Category
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href={"/add-post"} className="w-full h-full">
-                      Add Post
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {role && role === 1 ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="focus:outline-none" asChild>
+                    <Button>Add</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem asChild>
+                      <Link href={"/add-category"} className="w-full h-full">
+                        Add Category
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link href={"/add-post"} className="w-full h-full">
+                        Add Post
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : null}
               <DropdownMenu>
                 <DropdownMenuTrigger className="border p-2 rounded-md flex items-center gap-2 focus:outline-none">
                   {user.user_metadata.avatar_url ? (
@@ -72,7 +78,6 @@ const Navbar = ({ user }: NavbarProps) => {
                       className="rounded-full object-cover"
                     />
                   ) : null}
-
                   <p className="text-xs">
                     {user.user_metadata.display_name
                       ? user.user_metadata.display_name

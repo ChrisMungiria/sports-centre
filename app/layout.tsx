@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/home/navbar";
 import { createClient } from "@/utils/supabase/server";
+import { checkUserRole } from "@/actions/navbar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,6 +31,9 @@ export default async function RootLayout({
   const supabase = createClient();
   const { data } = await supabase.auth.getUser();
   const user = data.user;
+
+  // Get the user role
+  const role = await checkUserRole();
   return (
     <html lang="en">
       <body
@@ -42,7 +46,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar user={user} />
+          <Navbar user={user} role={role} />
           <main className="pt-20 p-4">{children}</main>
         </ThemeProvider>
       </body>
