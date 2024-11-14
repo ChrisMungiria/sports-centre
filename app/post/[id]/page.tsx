@@ -9,6 +9,7 @@ import {
   getPostById,
   getPostImage,
 } from "@/actions/post";
+import { fetchCommentCreator } from "@/actions/comment";
 
 // Date FNS
 import { formatDistanceToNow, format } from "date-fns";
@@ -62,6 +63,12 @@ const PostPage = async ({ params }: Params) => {
     }
   };
 
+  const renderCommentCreator = async (creatorID: string) => {
+    const data = await fetchCommentCreator(creatorID);
+    if (!data) return;
+    return data.display_name;
+  };
+
   const getCreator = async () => {
     const data = await fetchPostCreator(post[0].created_by);
     if (!data) return;
@@ -99,8 +106,7 @@ const PostPage = async ({ params }: Params) => {
             <h1>{comment.comment}</h1>
             <div className="flex items-center justify-between text-sm text-slate-500">
               <p>{renderCreatedAt(comment.created_at)}</p>
-              {/* TODO: Fetch the user who created the comment from the public user's table */}
-              <p>Comment by:</p>
+              <p>Comment by: {renderCommentCreator(comment.created_by)}</p>
             </div>
           </div>
         ))
