@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/home/navbar";
 import { createClient } from "@/utils/supabase/server";
 import { checkUserRole } from "@/actions/navbar";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,6 +41,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning={true}
       >
+        <SpeedInsights />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
