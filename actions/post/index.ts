@@ -144,3 +144,20 @@ export const fetchComments = async (postId: string) => {
     };
   }
 };
+
+export const fetchPostCreator = async (creatorId: string) => {
+  const supabase = createClient();
+
+  try {
+    const { data } = await supabase
+      .from("Users")
+      .select("display_name")
+      .eq("id", creatorId);
+    if (!data) return;
+    return {
+      display_name: data[0].display_name,
+    };
+  } catch (error) {
+    console.log("Error fetching the post creator: ", error);
+  }
+};

@@ -11,7 +11,7 @@ import { useEffect, useMemo, useState } from "react";
 import { formatDistanceToNow, format } from "date-fns";
 
 // Actions
-import { fetchAllPosts, getPostImage } from "@/actions/post";
+import { fetchAllPosts, fetchPostCreator, getPostImage } from "@/actions/post";
 
 // Components
 import {
@@ -37,6 +37,7 @@ type PostProps = {
 
 const Post = ({ post }: PostProps) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [creator, setCreator] = useState<string>();
 
   const renderCreatedAt = (createdAt: string) => {
     const createdDate = new Date(createdAt);
@@ -61,6 +62,14 @@ const Post = ({ post }: PostProps) => {
     return description;
   };
 
+  const getPostCreator = async () => {
+    const data = await fetchPostCreator(post.created_by);
+    console.log("Data: ", data);
+    if (data) {
+      setCreator(data.display_name);
+    }
+  };
+  getPostCreator();
   useEffect(() => {
     if (post.image) {
       const getPostImageHandler = async () => {
@@ -97,6 +106,7 @@ const Post = ({ post }: PostProps) => {
           />
         ) : null}
         <p>{truncateDescription(post.description, 24)}</p>
+        <p className="text-sm text-slate-500">By: {creator}</p>
       </CardContent>
       <CardFooter>
         {/* TODO: Link this to a page containing the full post */}
