@@ -69,11 +69,17 @@ export async function loginWithGoogleAction() {
   // initialize supabase
   const supabase = createClient();
 
+  // Create the callbackURL depending on the environment
+  const callbackURL =
+    process.env.NODE_ENV === "production"
+      ? "https://sports-centre.vercel.app/auth/callback"
+      : "http://localhost:3000/auth/callback";
+
   // Create the data object with the callback url
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: "http://localhost:3000/auth/callback",
+      redirectTo: callbackURL,
       queryParams: {
         access_type: "offline",
         prompt: "consent",
