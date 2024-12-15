@@ -41,7 +41,9 @@ const Navbar = ({ user, role }: NavbarProps) => {
 
   return (
     <nav className="w-full h-fit p-4 fixed inset-0 border-b flex items-center justify-between z-50 backdrop-blur-sm bg-white/80 dark:bg-black/80">
-      <h2 className="font-semibold text-lg">SportsCentre</h2>
+      <h2 className="font-semibold text-lg">
+        <Link href={"/"}>SportsCentre</Link>
+      </h2>
       <div className="flex gap-2 items-center">
         <ModeToggle />
         {!pathname.includes("/auth") ? (
