@@ -6,7 +6,7 @@ import { useState, useTransition } from "react";
 import { CategorySchema } from "@/schemas";
 
 // Actions
-import { addCategory } from "@/actions/category";
+import { addCategory, updateCategory } from "@/actions/category";
 
 // Zod and React Hook Form
 import { useForm } from "react-hook-form";
@@ -28,7 +28,11 @@ import { Input } from "@/components/ui/input";
 // ShadCN Toast
 import { useToast } from "@/hooks/use-toast";
 
-const AddCategoryForm = () => {
+type CategoryFormProps = {
+  category?: Category;
+};
+
+const CategoryForm = ({ category }: CategoryFormProps) => {
   const [isPending, startTransition] = useTransition();
 
   const [error, setError] = useState<string>("");
@@ -39,8 +43,8 @@ const AddCategoryForm = () => {
   const form = useForm<z.infer<typeof CategorySchema>>({
     resolver: zodResolver(CategorySchema),
     defaultValues: {
-      title: "",
-      icon: "",
+      title: category ? category.title : "",
+      icon: category ? (category.icon as string) : "",
     },
   });
 
@@ -60,10 +64,35 @@ const AddCategoryForm = () => {
       });
     });
   }
+
+  // Edit Submit handler
+  function onEditSubmit(values: z.infer<typeof CategorySchema>) {
+    startTransition(() => {
+      updateCategory(values, category!.id).then((data) => {
+        if (data?.error) {
+          setError(data.error);
+        } else if (data.success) {
+          toast({
+            title: "Category updated successfully",
+            description: `Category '${values.title}' has been updated successfully`,
+          });
+          form.reset();
+        }
+      });
+    });
+  }
+
   return (
     <div className="w-11/12 max-w-xs border rounded-md p-2 mx-auto space-y-4">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={
+            category
+              ? form.handleSubmit(onEditSubmit)
+              : form.handleSubmit(onSubmit)
+          }
+          className="space-y-4"
+        >
           <FormField
             control={form.control}
             name="title"
@@ -100,13 +129,19 @@ const AddCategoryForm = () => {
             )}
           />
           {error ? <p className="text-xs text-red-500">{error}</p> : null}
-          <Button disabled={isPending} type="submit" className="w-full">
-            {isPending ? "Adding..." : "Add category"}
-          </Button>
+          {category ? (
+            <Button disabled={isPending} type="submit" className="w-full">
+              {isPending ? "Editing..." : "Edit category"}
+            </Button>
+          ) : (
+            <Button disabled={isPending} type="submit" className="w-full">
+              {isPending ? "Adding..." : "Add category"}
+            </Button>
+          )}
         </form>
       </Form>
     </div>
   );
 };
 
-export default AddCategoryForm;
+export default CategoryForm;

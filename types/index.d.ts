@@ -10,9 +10,9 @@ type Post = {
 
 type Category = {
   id: number;
-  created_at: Date;
+  created_at: string;
   title: string;
-  icon: string;
+  icon: string | undefined | null;
 };
 
 type Comment = {

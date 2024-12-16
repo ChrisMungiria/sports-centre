@@ -52,12 +52,12 @@ const Navbar = ({ user, role }: NavbarProps) => {
               {role && role === 1 ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger className="focus:outline-none" asChild>
-                    <Button>Add</Button>
+                    <Button>Manage</Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuItem asChild>
-                      <Link href={"/add-category"} className="w-full h-full">
-                        Add Category
+                      <Link href={"/categories"} className="w-full h-full">
+                        Categories
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />

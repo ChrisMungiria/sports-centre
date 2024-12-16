@@ -11,6 +11,9 @@ import { checkUserRole } from "@/actions/navbar";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 
+// components
+import { Toaster } from "@/components/ui/toaster";
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -53,6 +56,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <Navbar user={user} role={role} />
+          <Toaster />
           <main className="pt-20 p-4">{children}</main>
         </ThemeProvider>
       </body>

@@ -180,7 +180,6 @@ export const addUserToDatabase = async () => {
   const { data } = await supabase.from("Users").select("*").eq("id", uid);
 
   if (data && data.length > 0) {
-    console.log("User already exists in the database");
     return;
   }
 
