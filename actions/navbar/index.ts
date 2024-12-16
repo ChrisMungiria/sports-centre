@@ -12,7 +12,7 @@ export const checkUserRole = async () => {
 
   try {
     // Get the user data from the public users table
-    const { data } = await supabase.from("Users").select().eq("id", uid);
+    const { data } = await supabase.from("Users").select().eq("id", uid!);
     if (!data) return;
     return data[0].role;
   } catch (error) {
