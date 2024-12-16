@@ -177,7 +177,7 @@ export const addUserToDatabase = async () => {
     : user.data.user?.user_metadata.full_name;
 
   // Check if the user already exists in the database
-  const { data } = await supabase.from("Users").select("*").eq("id", uid);
+  const { data } = await supabase.from("Users").select("*").eq("id", uid!);
 
   if (data && data.length > 0) {
     return;
@@ -185,8 +185,8 @@ export const addUserToDatabase = async () => {
 
   try {
     await supabase.from("Users").insert({
-      id: uid,
-      email,
+      id: uid!,
+      email: email!,
       display_name,
     });
   } catch (error) {
