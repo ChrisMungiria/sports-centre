@@ -43,7 +43,7 @@ export async function addComment(
     const { error } = await supabase.from("Comment").insert({
       comment,
       created_by: user.data.user.id,
-      post_id: postId,
+      post_id: parseInt(postId),
     });
 
     // If there is an error return the error
