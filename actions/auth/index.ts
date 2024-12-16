@@ -11,6 +11,7 @@ import { z } from "zod";
 
 // Schema
 import { LoginSchema, RegisterSchema } from "@/schemas/index";
+import { User } from "@supabase/supabase-js";
 
 export async function signOut() {
   const supabase = createClient();
@@ -163,18 +164,15 @@ export async function signup(values: z.infer<typeof RegisterSchema>) {
   }
 }
 
-export const addUserToDatabase = async () => {
+export const addUserToDatabase = async (user: User) => {
   // Create a supabase client
   const supabase = createClient();
 
-  // Get the current user
-  const user = await supabase.auth.getUser();
-
-  const uid = user.data.user?.id;
-  const email = user.data.user?.email;
-  const display_name = user.data.user?.user_metadata.display_name
-    ? user.data.user?.user_metadata.display_name
-    : user.data.user?.user_metadata.full_name;
+  const uid = user.id;
+  const email = user.email;
+  const display_name = user.user_metadata.display_name
+    ? user.user_metadata.display_name
+    : user.user_metadata.full_name;
 
   // Check if the user already exists in the database
   const { data } = await supabase.from("Users").select("*").eq("id", uid!);
@@ -185,7 +183,7 @@ export const addUserToDatabase = async () => {
 
   try {
     await supabase.from("Users").insert({
-      id: uid!,
+      id: uid,
       email: email!,
       display_name,
     });

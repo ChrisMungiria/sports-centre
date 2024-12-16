@@ -35,7 +35,7 @@ const Navbar = ({ user, role }: NavbarProps) => {
 
   useEffect(() => {
     if (user) {
-      addUserToDatabase();
+      addUserToDatabase(user);
     }
   }, [user]);
 
