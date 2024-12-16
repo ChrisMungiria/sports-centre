@@ -3,7 +3,7 @@ type Post = {
   created_at: string;
   title: string;
   description: string;
-  image?: string;
+  image: string | null | undefined;
   category: number;
   created_by: string;
 };

@@ -36,14 +36,16 @@ const PostPage = async ({ params }: Params) => {
   const user = data.user;
 
   const { data: post, error } = await getPostById(id);
+
+  if (!post) return <p className="text-red-500">Post not found</p>;
   const { data: postImage, error: getImageError } = await getPostImage(
-    post?.[0]?.image
+    post[0].image
   );
 
   const { data: comments, error: commentsError } = await fetchComments(id);
 
   if (error) return <p className="text-red-500">Error fetching the post</p>;
-  if (!post) return <p className="text-red-500">Post not found</p>;
+
   if (getImageError)
     return <p className="text-red-500">Error fetching the post image</p>;
 

@@ -84,7 +84,8 @@ export const fetchAllPosts = async () => {
   }
 };
 
-export const getPostImage = async (imagePath: string) => {
+export const getPostImage = async (imagePath: string | null) => {
+  if (!imagePath) return { data: null };
   const supabase = createClient();
 
   try {
