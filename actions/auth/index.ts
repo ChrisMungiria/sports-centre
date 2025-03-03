@@ -11,6 +11,7 @@ import { z } from "zod";
 
 // Schema
 import { LoginSchema, RegisterSchema } from "@/schemas/index";
+import { User } from "@supabase/supabase-js";
 
 export async function signOut() {
   const supabase = createClient();
@@ -69,11 +70,19 @@ export async function loginWithGoogleAction() {
   // initialize supabase
   const supabase = createClient();
 
+  // Create the callbackURL depending on the environment
+  const callbackURL =
+    process.env.NODE_ENV === "production"
+      ? "https://sports-centre.vercel.app/auth/callback"
+      : "http://localhost:3000/auth/callback";
+
+  console.log("environment: ", process.env.NODE_ENV);
+
   // Create the data object with the callback url
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: "http://localhost:3000/auth/callback",
+      redirectTo: callbackURL,
       queryParams: {
         access_type: "offline",
         prompt: "consent",
@@ -112,38 +121,25 @@ export async function signup(values: z.infer<typeof RegisterSchema>) {
     // Create a supabase client
     const supabase = createClient();
 
-    // Sign the user up
     const { error: signupError } = await supabase.auth.signUp({
       email,
       password,
-    });
-
-    // If there is an error return the error
-    if (signupError) {
-      // If the user with the same email tries to sign up return an error
-      if (signupError.code == "user_already_exists") {
-        return {
-          error: "User with this email already exists",
-        };
-      }
-      return {
-        error: "Error signing user up",
-      };
-    }
-
-    // Update the user's displayname
-    const { error: displaynameError } = await supabase.auth.updateUser({
-      data: {
-        display_name: fullname,
+      options: {
+        data: {
+          display_name: fullname,
+        },
       },
     });
 
-    // If there is an error return the error
-    if (displaynameError) {
-      return {
-        error: "Error updating the display name",
-      };
+    // Handle sign-up errors
+    if (signupError) {
+      console.error("Signup Error:", signupError);
+      if (signupError.message.includes("already registered")) {
+        return { error: "User with this email already exists" };
+      }
+      return { error: "Error signing up. Please try again." };
     }
+
     revalidatePath("/", "layout");
     // Indicate success
     return { success: true };
@@ -155,31 +151,27 @@ export async function signup(values: z.infer<typeof RegisterSchema>) {
   }
 }
 
-export const addUserToDatabase = async () => {
+export const addUserToDatabase = async (user: User) => {
   // Create a supabase client
   const supabase = createClient();
 
-  // Get the current user
-  const user = await supabase.auth.getUser();
-
-  const uid = user.data.user?.id;
-  const email = user.data.user?.email;
-  const display_name = user.data.user?.user_metadata.display_name
-    ? user.data.user?.user_metadata.display_name
-    : user.data.user?.user_metadata.full_name;
+  const uid = user.id;
+  const email = user.email;
+  const display_name = user.user_metadata.display_name
+    ? user.user_metadata.display_name
+    : user.user_metadata.full_name;
 
   // Check if the user already exists in the database
-  const { data } = await supabase.from("Users").select("*").eq("id", uid);
+  const { data } = await supabase.from("Users").select("*").eq("id", uid!);
 
   if (data && data.length > 0) {
-    console.log("User already exists in the database");
     return;
   }
 
   try {
     await supabase.from("Users").insert({
       id: uid,
-      email,
+      email: email!,
       display_name,
     });
   } catch (error) {

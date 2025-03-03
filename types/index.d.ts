@@ -3,16 +3,16 @@ type Post = {
   created_at: string;
   title: string;
   description: string;
-  image?: string;
+  image: string | null | undefined;
   category: number;
   created_by: string;
 };
 
 type Category = {
   id: number;
-  created_at: Date;
+  created_at: string;
   title: string;
-  icon: string;
+  icon: string | undefined | null;
 };
 
 type Comment = {

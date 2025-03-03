@@ -2,9 +2,9 @@
 import { createClient } from "@/utils/supabase/server";
 
 type PostData = {
-  title: string | null;
-  description: string | null;
-  category: string | null;
+  title: string;
+  description: string;
+  category: number;
   created_by: string;
   image?: string;
 };
@@ -32,7 +32,7 @@ export const addPostAction = async (formData: FormData) => {
   const postData: PostData = {
     title,
     description,
-    category,
+    category: parseInt(category),
     created_by: user.id,
   };
 
@@ -84,7 +84,8 @@ export const fetchAllPosts = async () => {
   }
 };
 
-export const getPostImage = async (imagePath: string) => {
+export const getPostImage = async (imagePath: string | null) => {
+  if (!imagePath) return { data: null };
   const supabase = createClient();
 
   try {

@@ -35,13 +35,15 @@ const Navbar = ({ user, role }: NavbarProps) => {
 
   useEffect(() => {
     if (user) {
-      addUserToDatabase();
+      addUserToDatabase(user);
     }
   }, [user]);
 
   return (
     <nav className="w-full h-fit p-4 fixed inset-0 border-b flex items-center justify-between z-50 backdrop-blur-sm bg-white/80 dark:bg-black/80">
-      <h2 className="font-semibold text-lg">SportsCentre</h2>
+      <h2 className="font-semibold text-lg">
+        <Link href={"/"}>SportsCentre</Link>
+      </h2>
       <div className="flex gap-2 items-center">
         <ModeToggle />
         {!pathname.includes("/auth") ? (
@@ -50,12 +52,12 @@ const Navbar = ({ user, role }: NavbarProps) => {
               {role && role === 1 ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger className="focus:outline-none" asChild>
-                    <Button>Add</Button>
+                    <Button>Manage</Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuItem asChild>
-                      <Link href={"/add-category"} className="w-full h-full">
-                        Add Category
+                      <Link href={"/categories"} className="w-full h-full">
+                        Categories
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />

@@ -36,14 +36,16 @@ const PostPage = async ({ params }: Params) => {
   const user = data.user;
 
   const { data: post, error } = await getPostById(id);
+
+  if (!post) return <p className="text-red-500">Post not found</p>;
   const { data: postImage, error: getImageError } = await getPostImage(
-    post?.[0]?.image
+    post[0].image
   );
 
   const { data: comments, error: commentsError } = await fetchComments(id);
 
   if (error) return <p className="text-red-500">Error fetching the post</p>;
-  if (!post) return <p className="text-red-500">Post not found</p>;
+
   if (getImageError)
     return <p className="text-red-500">Error fetching the post image</p>;
 
@@ -122,7 +124,7 @@ const PostPage = async ({ params }: Params) => {
           <p className="text-slate-500 text-center">
             Log in or create an account to comment.
           </p>
-          <div className="flex items-center justify-between w-3/4 mx-auto mt-4">
+          <div className="flex flex-col items-center justify-between w-3/4 mx-auto mt-4 space-y-2">
             <Button asChild>
               <Link href="/auth/login">Sign in</Link>
             </Button>

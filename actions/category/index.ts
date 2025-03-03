@@ -7,6 +7,7 @@ import { CategorySchema } from "@/schemas";
 
 // Zod
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 
 export const fetchAllCategories = async () => {
   const supabase = createClient();
@@ -72,3 +73,98 @@ export const addCategory = async (values: z.infer<typeof CategorySchema>) => {
     };
   }
 };
+
+export const deleteCategory = async (rowID: number) => {
+  // Check if there are posts within this category
+  const hasPosts = await checkIfCategoryHasPosts(rowID);
+  if (hasPosts) {
+    console.log("Has posts, cannot delete");
+    return {
+      error: "Cannot delete category with posts",
+    };
+  }
+  // Create a supabase client
+  const supabase = createClient();
+  await supabase.from("Category").delete().eq("id", rowID);
+  revalidatePath("/", "layout");
+};
+
+export const fetchCategoryById = async (categoryId: number) => {
+  const supabase = createClient();
+  const { data } = await supabase
+    .from("Category")
+    .select()
+    .eq("id", categoryId);
+  return data;
+};
+
+export const updateCategory = async (
+  values: z.infer<typeof CategorySchema>,
+  categoryId: number
+) => {
+  // Validate the values on the server side
+  const validatedValues = CategorySchema.safeParse(values);
+  if (validatedValues.error) {
+    console.log("Validation Error: ", validatedValues.error);
+    return {
+      error: "Error validating fields",
+    };
+  }
+
+  const { icon, title } = validatedValues.data;
+
+  try {
+    // Create a supabase client
+    const supabase = createClient();
+
+    // Update the category in the db
+    const { error } = await supabase
+      .from("Category")
+      .update({
+        icon,
+        title,
+      })
+      .eq("id", categoryId);
+
+    // If there is an error return the error
+    if (error) {
+      console.log("Error: ", error);
+      return {
+        error: " Error adding a category",
+      };
+    }
+
+    // If there is no error return a success
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.log("Error in addCategoryAction function: ", { error });
+    return {
+      error: "An unexpected error occurred",
+    };
+  }
+};
+
+// Helper functions
+async function checkIfCategoryHasPosts(categoryId: number) {
+  try {
+    // Create a supabase client
+    const supabase = createClient();
+
+    const { data } = await supabase
+      .from("Posts")
+      .select()
+      .eq("category", categoryId);
+    if (data) {
+      if (data?.length > 0) {
+        return true;
+      }
+      return false;
+    }
+
+    return false;
+  } catch (error) {
+    console.log("Error checking if category has posts: ", error);
+  }
+}
