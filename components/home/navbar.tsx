@@ -66,12 +66,6 @@ const Navbar = ({ user, role }: NavbarProps) => {
                         Add Post
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                      <Link href={"/add-turf"} className="w-full h-full">
-                        Add Turf
-                      </Link>
-                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : null}

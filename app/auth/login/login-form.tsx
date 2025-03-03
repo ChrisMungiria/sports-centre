@@ -25,7 +25,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import LogInWithGoogle from "./log-in-with-google";
 
 // Actions
 import { login } from "@/actions/auth";
@@ -106,7 +105,6 @@ const LoginForm = () => {
         <p className="my-4 text-slate-400 text-sm">or</p>
         <hr className="flex-1 h-px bg-slate-900" />
       </div>
-      <LogInWithGoogle />
     </div>
   );
 };

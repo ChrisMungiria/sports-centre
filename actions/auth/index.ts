@@ -121,38 +121,25 @@ export async function signup(values: z.infer<typeof RegisterSchema>) {
     // Create a supabase client
     const supabase = createClient();
 
-    // Sign the user up
     const { error: signupError } = await supabase.auth.signUp({
       email,
       password,
-    });
-
-    // If there is an error return the error
-    if (signupError) {
-      // If the user with the same email tries to sign up return an error
-      if (signupError.code == "user_already_exists") {
-        return {
-          error: "User with this email already exists",
-        };
-      }
-      return {
-        error: "Error signing user up",
-      };
-    }
-
-    // Update the user's displayname
-    const { error: displaynameError } = await supabase.auth.updateUser({
-      data: {
-        display_name: fullname,
+      options: {
+        data: {
+          display_name: fullname,
+        },
       },
     });
 
-    // If there is an error return the error
-    if (displaynameError) {
-      return {
-        error: "Error updating the display name",
-      };
+    // Handle sign-up errors
+    if (signupError) {
+      console.error("Signup Error:", signupError);
+      if (signupError.message.includes("already registered")) {
+        return { error: "User with this email already exists" };
+      }
+      return { error: "Error signing up. Please try again." };
     }
+
     revalidatePath("/", "layout");
     // Indicate success
     return { success: true };

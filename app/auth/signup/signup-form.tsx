@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
 
 // Form Items
 import { useForm } from "react-hook-form";
@@ -28,14 +27,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import LogInWithGoogle from "../login/log-in-with-google";
+import { useToast } from "@/hooks/use-toast";
 
 const SignupForm = () => {
   const [isPending, startTransition] = useTransition();
 
   const [error, setError] = useState<string>();
 
-  const router = useRouter();
+  const { toast } = useToast();
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -54,7 +54,10 @@ const SignupForm = () => {
         if (data?.error) {
           setError(data.error);
         } else if (data?.success) {
-          router.push("/");
+          toast({
+            title: "Confirm your email",
+            description: `We have sent a confirmation email to ${values.email}. Please check your inbox and click the confirmation link to complete the registration process.`,
+          });
         }
       });
     });
@@ -135,7 +138,6 @@ const SignupForm = () => {
         <p className="my-4 text-slate-400 text-sm">or</p>
         <hr className="flex-1 h-px bg-slate-900" />
       </div>
-      <LogInWithGoogle />
     </div>
   );
 };
