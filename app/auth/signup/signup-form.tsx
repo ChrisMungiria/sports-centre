@@ -133,11 +133,6 @@ const SignupForm = () => {
           </Button>
         </form>
       </Form>
-      <div className="flex items-center gap-5">
-        <hr className="flex-1 h-px bg-slate-900" />
-        <p className="my-4 text-slate-400 text-sm">or</p>
-        <hr className="flex-1 h-px bg-slate-900" />
-      </div>
     </div>
   );
 };
